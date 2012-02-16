@@ -1,9 +1,11 @@
 {%  extends 'base.html' %}
 
 {%  block content %}
-
+<h1>CheckLists:</h1>
+<ul>
 {%  for check in list %}
-    <h1>{{ check.name }} - {{ check.creator }} - {{ check.items.count }}</h1>
+    <li><a href="{% url checkApp.views.viewList check.pk  %}">{{ check.name }} - {{ check.creator }} - {{ check.items.count }}</a></li>
 
 {% endfor %}
+</ul>
 {%  endblock %}

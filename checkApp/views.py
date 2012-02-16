@@ -8,3 +8,11 @@ def index(request):
         'list': clist,
     }
     return render(request, 'checkApp/index.html', context)
+
+
+def viewList(request,pk):
+    list = get_object_or_404(CheckList,pk=pk)
+    context = {
+        'list': list
+    }
+    return render (request, 'checkApp/viewList.html', context)
