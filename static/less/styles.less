@@ -1,0 +1,60 @@
+@black: #020202;
+@blue: #b9e9ff;
+@grey: #b0b0b0;
+
+.box-shadow (@x: 0, @y: 0, @blur: 1px, @alpha) {
+  @val: @x @y @blur rgba(0, 0, 0, @alpha);
+
+  box-shadow:         @val;
+  -webkit-box-shadow: @val;
+  -moz-box-shadow:    @val;
+}
+.box { @base: @black;
+  color:        saturate(@base, 5%);
+  border-color: lighten(@base, 30%);
+  div { .box-shadow(0, 0, 10px, 0.4) }
+}
+
+.middle {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+
+.main {
+    .middle;
+}
+
+#menubar {
+    .middle;
+    text-align: center;
+}
+
+
+.blogPost {
+    background-color: @blue;
+    border: 1px;
+    .box-shadow(0, 0, 15px, 0.4)
+}
+
+a.menu {
+    .box;
+	font-weight: bold;
+   	background-color: @blue;
+
+}
+
+a.menu:hover {
+
+	background-color: lighten(@blue, 5%);
+}
+
+#sidebar {
+    .box;
+    float: right;
+    padding: 4px;
+}
+
+a.postTitle {
+    color
+}
