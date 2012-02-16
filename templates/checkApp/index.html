@@ -1,6 +1,9 @@
 {%  extends 'base.html' %}
 
 {%  block content %}
-<h1>YAY!</h1>
 
+{%  for check in list %}
+    <h1>{{ check.name }} - {{ check.creator }} - {{ check.items.count }}</h1>
+
+{% endfor %}
 {%  endblock %}
