@@ -1,0 +1,7 @@
+syntax: glob
+*.pyc
+.DS_Store
+db.sql
+media/
+\.idea/*
+settings_local.py
