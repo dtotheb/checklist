@@ -80,11 +80,12 @@ class checkItemDoneTestCase(CheckTestHelper,TestCase):
         self.url = reverse('checkItemDone')
 
     def test_post(self):
-        response = self.client.post(self.url,data={'pk':1},HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post(self.url,data={'pk':1,'val': 'true'},HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code,200)
 
         item = simplejson.loads(response.content)[0]
         self.assertEqual(item['pk'],1)
         self.assertEqual(item['model'],'checkApp.checkitem')
-        self.assertEqual(item['fields']['done'], True)
+        self.assertEqual(item['fields']['done'], False)
+        print item
 

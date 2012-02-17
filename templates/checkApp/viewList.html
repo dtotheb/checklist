@@ -1,10 +1,39 @@
 {% extends 'base.html' %}
-{%  block content %}
+{%  block headjs %}
+<script type="text/javascript">
 
+    $(document).ready(function(){
+        $('input.checkItem').click(function(){
+            var data = {};
+            data['csrfmiddlewaretoken'] = $('input[name=csrfmiddlewaretoken]').val();//grab the hidden csrf token
+            data['pk'] = $(this).attr('id');
+            if (this.checked)
+            {
+                data['val'] = false;
+            }
+            else
+            {
+                data['val'] = true;
+            }
+            $.post("{% url checkApp.views.checkItemDone %}", data, function(resp){
+               var obj = jQuery.parseJSON(resp);
+            },'json');
+        });
+
+
+    });
+
+
+
+
+</script>
+{% endblock %}
+{%  block content %}
+{%  csrf_token %}
 <h1>{{ list.name}}</h1>
 <ul>
 {% for item in list.items.all %}
-<li><input type="checkbox"{%  if item.done %}checked{% endif %}>{{ item.text }}</li>
+<li><input type="checkbox"{%  if item.done %}checked{% endif %} class="checkItem" id="{{ item.pk }}">{{ item.text }}</li>
 {% endfor %}
 </ul>
 {% endblock %}
