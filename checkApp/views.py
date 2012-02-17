@@ -5,14 +5,16 @@ from django.http import Http404, HttpResponse
 from django.core import serializers
 
 from checkApp.models import CheckList, Task
-from checkApp.forms import TaskForm
+from checkApp.forms import TaskForm, CheckListForm
 
 
 def index(request):
     clist = CheckList.objects.all()
+    form = CheckListForm()
     context = {
         'list': clist,
-        'title': 'yay'
+        'title': 'yay',
+        'form': form
     }
     return render(request, 'checkApp/index.html', context)
 
