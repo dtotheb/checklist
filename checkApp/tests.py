@@ -99,3 +99,16 @@ class createTaskTestCase(CheckTestHelper,TestCase):
         itemsTotalAfter = Task.objects.all().count()
         self.assertEqual(itemsTotalBefore+1,itemsTotalAfter)
 
+
+class createCheckListTestCase(CheckTestHelper, TestCase):
+    def setUp(self):
+        CheckTestHelper.setupCheckList(self)
+        self.url = reverse('createCheckList')
+
+    def test_post(self):
+        data={'name':'testlist',
+              'creator':'tester'}
+        response = self.client.post(self.url,data=data,HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code,200)
+        newList = simplejson.loads(response.content)[0]
+        self.assertEqual(data['name'],newList['fields']['name'])

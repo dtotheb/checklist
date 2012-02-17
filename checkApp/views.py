@@ -69,7 +69,17 @@ def createTask(request):
         return HttpResponse(status=403)
 
 
-
+def createCheckList(request):
+    if request.is_ajax() and request.method == "POST":
+        list = CheckList.objects.create(
+            name = request.POST['name'],
+            creator = request.POST['creator'],
+        )
+        list.save()
+        data = serializers.serialize('json',[list])
+        return HttpResponse(data)
+    else:
+        return HttpResponse(status=403)
 
 
 
