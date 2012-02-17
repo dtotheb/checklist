@@ -52,34 +52,38 @@ def taskDone(request):
 
 def createTask(request):
     if request.is_ajax() and request.method == "POST":
-        pk = request.POST['pk']
-        try:
-            list = CheckList.objects.get(pk=pk)
-        except CheckList.DoesNotExist:
-            return Http404
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            pk = request.POST['pk']
+            try:
+                list = CheckList.objects.get(pk=pk)
+            except CheckList.DoesNotExist:
+                return Http404
 
-        item = Task.objects.create(
-            checkList = list,
-            text = request.POST['text'],
-            done = False
-        )
+            item = Task.objects.create(
+                checkList = list,
+                text = request.POST['text'],
+                done = False
+            )
 
-        item.save()
-        data = serializers.serialize('json',[item])
-        return HttpResponse(data)
+            item.save()
+            data = serializers.serialize('json',[item])
+            return HttpResponse(data)
     else:
         return HttpResponse(status=403)
 
 
 def createCheckList(request):
     if request.is_ajax() and request.method == "POST":
-        list = CheckList.objects.create(
-            name = request.POST['name'],
-            creator = request.POST['creator'],
-        )
-        list.save()
-        data = serializers.serialize('json',[list])
-        return HttpResponse(data)
+        form = CheckListForm(request.POST)
+        if form.is_valid():
+            list = CheckList.objects.create(
+                name = request.POST['name'],
+                creator = request.POST['creator'],
+            )
+            list.save()
+            data = serializers.serialize('json',[list])
+            return HttpResponse(data)
     else:
         return HttpResponse(status=403)
 
