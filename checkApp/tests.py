@@ -34,12 +34,15 @@ class CheckTestHelper(object):
         }
         return CheckItem.objects.create(**defaults)
 
-
-class IndexPageTestCase(CheckTestHelper,TestCase):
-    def setUp(self):
+    def setupCheckList(self):
         CheckTestHelper.create_checklist(self)
         CheckTestHelper.create_checkItem(self, text='test1')
         CheckTestHelper.create_checkItem(self, text='test2')
+
+
+class IndexPageTestCase(CheckTestHelper,TestCase):
+    def setUp(self):
+        CheckTestHelper.setupCheckList(self)
         self.url = reverse('index')
 
 
@@ -51,6 +54,22 @@ class IndexPageTestCase(CheckTestHelper,TestCase):
     def test_pageContext(self):
         context = self.client.get(self.url).context
         self.assertIn('list',context)
+
+class viewListTestCase(CheckTestHelper,TestCase):
+    def setUp(self):
+        CheckTestHelper.setupCheckList(self)
+        self.url = reverse('viewList', args=[1])
+
+    def test_pageLoads(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response,'checkApp/viewList.html')
+
+    def test_pageContext(self):
+        context = self.client.get(self.url).context
+        self.assertIn('list',context)
+        items = context['list'].items.all()
+        self.assertEqual(items.count(),2)
 
 
 class checkItemDoneTestCase(CheckTestHelper,TestCase):
