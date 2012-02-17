@@ -1,9 +1,11 @@
 # Create your views here.
 from django.shortcuts import render, get_object_or_404
-from checkApp.models import CheckList, Task
 from django.core.context_processors import csrf
 from django.http import Http404, HttpResponse
 from django.core import serializers
+
+from checkApp.models import CheckList, Task
+from checkApp.forms import TaskForm
 
 
 def index(request):
@@ -17,10 +19,12 @@ def index(request):
 
 def viewList(request, pk):
     list = get_object_or_404(CheckList, pk=pk)
+    form = TaskForm()
     context = {
         'list': list,
         'title': list.name,
-        'csrf': csrf(request)
+        'csrf': csrf(request),
+        'form':form
     }
     return render(request, 'checkApp/viewList.html', context)
 

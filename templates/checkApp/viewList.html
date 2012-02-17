@@ -16,8 +16,21 @@
                 data['val'] = true;
             }
             $.post("{% url checkApp.views.taskDone %}", data, function(resp){
-               var obj = jQuery.parseJSON(resp);
+
             },'json');
+        });
+
+        $('form#createTask').submit(function(){
+            var data = {};
+            data['csrfmiddlewaretoken'] = $('input[name=csrfmiddlewaretoken]').val();//grab the hidden csrf token
+            data['pk'] = "{{ list.pk }}";
+            data['text'] = $('input[name=text]').val();
+            $.post("{% url checkApp.views.createTask %}",data, function(resp){
+                var task = resp[0];
+                var newtask = '<li><input type="checkbox" class="checkItem" id="' + task.pk + '">' + task.fields.text + '</li>';
+                $('#tasks').append(newtask);
+            },'json');
+            return false;
         });
 
 
@@ -29,11 +42,18 @@
 </script>
 {% endblock %}
 {%  block content %}
-{%  csrf_token %}
+
 <h1>{{ list.name}}</h1>
-<ul>
+<ul id="tasks">
 {% for item in list.items.all %}
 <li><input type="checkbox"{%  if item.done %}checked{% endif %} class="checkItem" id="{{ item.pk }}">{{ item.text }}</li>
 {% endfor %}
 </ul>
+    {% load widget_tweaks %}
+<form action="{%  url checkApp.views.createTask %}" method="post" id="createTask">
+{%  csrf_token %}
+{{  form.text }}
+{{  form.pk|attr:"type:hidden" }}
+<input type="submit" value="Create Task">
+</form>
 {% endblock %}
