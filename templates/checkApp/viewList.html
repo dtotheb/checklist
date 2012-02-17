@@ -29,6 +29,7 @@
                 var task = resp[0];
                 var newtask = '<li><input type="checkbox" class="checkItem" id="' + task.pk + '">' + task.fields.text + '</li>';
                 $('#tasks').append(newtask);
+                $('input[name=text]').val('');
             },'json');
             return false;
         });
