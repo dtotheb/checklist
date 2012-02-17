@@ -25,7 +25,7 @@ def viewList(request, pk):
     return render(request, 'checkApp/viewList.html', context)
 
 def checkItemDone(request):
-    if request.is_ajax() and request.method =="POST":
+    if request.is_ajax() and request.method == "POST":
         pk = request.POST['pk']
         val = request.POST['val']
         try:
@@ -42,7 +42,28 @@ def checkItemDone(request):
         data = serializers.serialize('json',[CI])
         return HttpResponse(data)
     else:
-        return HttpResponse(status=405)
+        return HttpResponse(status=403)
+
+def createCheckItem(request):
+    if request.is_ajax() and request.method == "POST":
+        pk = request.POST['pk']
+        try:
+            list = CheckList.objects.get(pk=pk)
+        except CheckList.DoesNotExist:
+            return Http404
+
+        item = CheckItem.objects.create(
+            checkList = list,
+            text = request.POST['text'],
+            done = False
+        )
+
+        item.save()
+        data = serializers.serialize('json',[item])
+        return HttpResponse(data)
+    else:
+        return HttpResponse(status=403)
+
 
 
 

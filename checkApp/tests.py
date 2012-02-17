@@ -74,9 +74,7 @@ class viewListTestCase(CheckTestHelper,TestCase):
 
 class checkItemDoneTestCase(CheckTestHelper,TestCase):
     def setUp(self):
-        CheckTestHelper.create_checklist(self)
-        CheckTestHelper.create_checkItem(self, text='test1')
-        CheckTestHelper.create_checkItem(self, text='test2')
+        CheckTestHelper.setupCheckList(self)
         self.url = reverse('checkItemDone')
 
     def test_post(self):
@@ -87,5 +85,17 @@ class checkItemDoneTestCase(CheckTestHelper,TestCase):
         self.assertEqual(item['pk'],1)
         self.assertEqual(item['model'],'checkApp.checkitem')
         self.assertEqual(item['fields']['done'], False)
-        print item
+
+
+class createCheckItemTestCase(CheckTestHelper,TestCase):
+    def setUp(self):
+        CheckTestHelper.setupCheckList(self)
+        self.url = reverse('createCheckItem')
+
+    def test_post(self):
+        itemsTotalBefore = CheckItem.objects.all().count()
+        response = self.client.post(self.url,data={'pk':1,'text':'test'},HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code,200)
+        itemsTotalAfter = CheckItem.objects.all().count()
+        self.assertEqual(itemsTotalBefore+1,itemsTotalAfter)
 
