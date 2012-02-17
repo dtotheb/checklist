@@ -87,10 +87,10 @@ class taskDoneTestCase(CheckTestHelper,TestCase):
         self.assertEqual(item['fields']['done'], False)
 
 
-class createCheckItemTestCase(CheckTestHelper,TestCase):
+class createTaskTestCase(CheckTestHelper,TestCase):
     def setUp(self):
         CheckTestHelper.setupCheckList(self)
-        self.url = reverse('createCheckItem')
+        self.url = reverse('createTask')
 
     def test_post(self):
         itemsTotalBefore = Task.objects.all().count()

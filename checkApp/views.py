@@ -44,7 +44,7 @@ def taskDone(request):
     else:
         return HttpResponse(status=403)
 
-def createCheckItem(request):
+def createTask(request):
     if request.is_ajax() and request.method == "POST":
         pk = request.POST['pk']
         try:
