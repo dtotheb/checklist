@@ -9,7 +9,7 @@ class CheckList(models.Model):
         return self.name
 
 
-class CheckItem(models.Model):
+class Task(models.Model):
     text = models.CharField(max_length=255)
     done = models.BooleanField(default=False)
     checkList = models.ForeignKey(CheckList, related_name='items')

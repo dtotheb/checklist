@@ -6,7 +6,7 @@ Replace this with more appropriate tests for your application.
 """
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from checkApp.models import CheckList, CheckItem
+from checkApp.models import CheckList, Task
 from django.core import serializers
 from django.utils import simplejson
 
@@ -22,7 +22,7 @@ class CheckTestHelper(object):
         return CheckList.objects.create(**defaults)
 
     def create_checkItem(self, *args, **kwargs):
-        id = CheckItem.objects.all().count()
+        id = Task.objects.all().count()
         if kwargs.get('pk'):
             pk = kwargs.get('pk')
         else:
@@ -32,7 +32,7 @@ class CheckTestHelper(object):
             'done' : False,
             'checkList' : CheckList.objects.get(id=pk)
         }
-        return CheckItem.objects.create(**defaults)
+        return Task.objects.create(**defaults)
 
     def setupCheckList(self):
         CheckTestHelper.create_checklist(self)
@@ -83,7 +83,7 @@ class checkItemDoneTestCase(CheckTestHelper,TestCase):
 
         item = simplejson.loads(response.content)[0]
         self.assertEqual(item['pk'],1)
-        self.assertEqual(item['model'],'checkApp.checkitem')
+        self.assertEqual(item['model'],'checkApp.task')
         self.assertEqual(item['fields']['done'], False)
 
 
@@ -93,9 +93,9 @@ class createCheckItemTestCase(CheckTestHelper,TestCase):
         self.url = reverse('createCheckItem')
 
     def test_post(self):
-        itemsTotalBefore = CheckItem.objects.all().count()
+        itemsTotalBefore = Task.objects.all().count()
         response = self.client.post(self.url,data={'pk':1,'text':'test'},HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code,200)
-        itemsTotalAfter = CheckItem.objects.all().count()
+        itemsTotalAfter = Task.objects.all().count()
         self.assertEqual(itemsTotalBefore+1,itemsTotalAfter)
 

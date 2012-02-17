@@ -1,5 +1,5 @@
 from django.contrib import admin
-from checkApp.models import CheckList, CheckItem
+from checkApp.models import CheckList, Task
 
 
 class CheckListAdmin(admin.ModelAdmin):
@@ -11,4 +11,4 @@ admin.site.register(CheckList, CheckListAdmin)
 class CheckItemAdmin(admin.ModelAdmin):
     search_fields = ('text',)
 
-admin.site.register(CheckItem, CheckItemAdmin)
+admin.site.register(Task, CheckItemAdmin)

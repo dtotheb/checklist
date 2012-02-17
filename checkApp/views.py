@@ -1,6 +1,6 @@
 # Create your views here.
 from django.shortcuts import render, get_object_or_404
-from checkApp.models import CheckList, CheckItem
+from checkApp.models import CheckList, Task
 from django.core.context_processors import csrf
 from django.http import Http404, HttpResponse
 from django.core import serializers
@@ -29,8 +29,8 @@ def checkItemDone(request):
         pk = request.POST['pk']
         val = request.POST['val']
         try:
-            CI = CheckItem.objects.get(pk=pk)
-        except CheckItem.DoesNotExist:
+            CI = Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
             return Http404
 
         if val == 'true':
@@ -52,7 +52,7 @@ def createCheckItem(request):
         except CheckList.DoesNotExist:
             return Http404
 
-        item = CheckItem.objects.create(
+        item = Task.objects.create(
             checkList = list,
             text = request.POST['text'],
             done = False
