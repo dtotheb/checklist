@@ -26,9 +26,10 @@ def viewList(request, pk):
         'list': list,
         'title': list.name,
         'csrf': csrf(request),
-        'form':form
+        'form': form
     }
     return render(request, 'checkApp/viewList.html', context)
+
 
 def taskDone(request):
     if request.is_ajax() and request.method == "POST":
@@ -45,10 +46,11 @@ def taskDone(request):
             task.done = True
 
         task.save()
-        data = serializers.serialize('json',[task])
+        data = serializers.serialize('json', [task])
         return HttpResponse(data)
     else:
         return HttpResponse(status=403)
+
 
 def createTask(request):
     if request.is_ajax() and request.method == "POST":
@@ -56,18 +58,18 @@ def createTask(request):
         if form.is_valid():
             pk = request.POST['pk']
             try:
-                list = CheckList.objects.get(pk=pk)
+                clist = CheckList.objects.get(pk=pk)
             except CheckList.DoesNotExist:
                 return Http404
 
             item = Task.objects.create(
-                checkList = list,
+                checkList = clist,
                 text = request.POST['text'],
-                done = False
+                done = False,
             )
 
             item.save()
-            data = serializers.serialize('json',[item])
+            data = serializers.serialize('json', [item])
             return HttpResponse(data)
     else:
         return HttpResponse(status=403)
@@ -82,12 +84,7 @@ def createCheckList(request):
                 creator = request.POST['creator'],
             )
             list.save()
-            data = serializers.serialize('json',[list])
+            data = serializers.serialize('json', [list])
             return HttpResponse(data)
     else:
         return HttpResponse(status=403)
-
-
-
-
-
