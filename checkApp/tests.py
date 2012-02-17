@@ -7,7 +7,8 @@ Replace this with more appropriate tests for your application.
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from checkApp.models import CheckList, CheckItem
-
+from django.core import serializers
+from django.utils import simplejson
 
 
 class CheckTestHelper(object):
@@ -50,3 +51,21 @@ class IndexPageTestCase(CheckTestHelper,TestCase):
     def test_pageContext(self):
         context = self.client.get(self.url).context
         self.assertIn('list',context)
+
+
+class checkItemDoneTestCase(CheckTestHelper,TestCase):
+    def setUp(self):
+        CheckTestHelper.create_checklist(self)
+        CheckTestHelper.create_checkItem(self, text='test1')
+        CheckTestHelper.create_checkItem(self, text='test2')
+        self.url = reverse('checkItemDone')
+
+    def test_post(self):
+        response = self.client.post(self.url,data={'pk':1},HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code,200)
+
+        item = simplejson.loads(response.content)[0]
+        self.assertEqual(item['pk'],1)
+        self.assertEqual(item['model'],'checkApp.checkitem')
+        self.assertEqual(item['fields']['done'], True)
+
