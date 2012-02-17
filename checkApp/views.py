@@ -24,22 +24,22 @@ def viewList(request, pk):
     }
     return render(request, 'checkApp/viewList.html', context)
 
-def checkItemDone(request):
+def taskDone(request):
     if request.is_ajax() and request.method == "POST":
         pk = request.POST['pk']
         val = request.POST['val']
         try:
-            CI = Task.objects.get(pk=pk)
+            task = Task.objects.get(pk=pk)
         except Task.DoesNotExist:
             return Http404
 
         if val == 'true':
-            CI.done = False
+            task.done = False
         else:
-            CI.done = True
+            task.done = True
 
-        CI.save()
-        data = serializers.serialize('json',[CI])
+        task.save()
+        data = serializers.serialize('json',[task])
         return HttpResponse(data)
     else:
         return HttpResponse(status=403)

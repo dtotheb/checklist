@@ -72,10 +72,10 @@ class viewListTestCase(CheckTestHelper,TestCase):
         self.assertEqual(items.count(),2)
 
 
-class checkItemDoneTestCase(CheckTestHelper,TestCase):
+class taskDoneTestCase(CheckTestHelper,TestCase):
     def setUp(self):
         CheckTestHelper.setupCheckList(self)
-        self.url = reverse('checkItemDone')
+        self.url = reverse('taskDone')
 
     def test_post(self):
         response = self.client.post(self.url,data={'pk':1,'val': 'true'},HTTP_X_REQUESTED_WITH='XMLHttpRequest')

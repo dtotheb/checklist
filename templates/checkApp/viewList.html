@@ -15,7 +15,7 @@
             {
                 data['val'] = true;
             }
-            $.post("{% url checkApp.views.checkItemDone %}", data, function(resp){
+            $.post("{% url checkApp.views.taskDone %}", data, function(resp){
                var obj = jQuery.parseJSON(resp);
             },'json');
         });
