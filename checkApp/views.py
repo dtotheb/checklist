@@ -58,15 +58,14 @@ def createTask(request):
         if form.is_valid():
             pk = request.POST['pk']
             try:
-                clist = CheckList.objects.get(pk=pk)
+                cList = CheckList.objects.get(pk=pk)
             except CheckList.DoesNotExist:
                 return Http404
 
-            item = Task.objects.create(
-                checkList = clist,
-                text = request.POST['text'],
-                done = False,
-            )
+            item = Task.objects.create()
+            item.checklist = cList
+            item.text = request.POST['text']
+            item.done = False
 
             item.save()
             data = serializers.serialize('json', [item])
@@ -79,10 +78,10 @@ def createCheckList(request):
     if request.is_ajax() and request.method == "POST":
         form = CheckListForm(request.POST)
         if form.is_valid():
-            list = CheckList.objects.create(
-                name = request.POST['name'],
-                creator = request.POST['creator'],
-            )
+            list = CheckList.objects.create()
+            list.name = request.POST['name'],
+            list.creator = request.POST['creator'],
+
             list.save()
             data = serializers.serialize('json', [list])
             return HttpResponse(data)

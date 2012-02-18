@@ -79,7 +79,9 @@ class taskDoneTestCase(CheckTestHelper, TestCase):
 
     def test_post(self):
         data = {'pk': 1, 'val': 'true'}
-        response = self.client.post(self.url, data=data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post(self.url,
+            data=data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
 
         item = simplejson.loads(response.content)[0]
@@ -96,7 +98,9 @@ class createTaskTestCase(CheckTestHelper, TestCase):
     def test_post(self):
         itemsTotalBefore = Task.objects.all().count()
         data = {'pk': 1, 'text': 'test'}
-        response = self.client.post(self.url, data=data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post(self.url,
+            data=data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         itemsTotalAfter = Task.objects.all().count()
         self.assertEqual(itemsTotalBefore + 1, itemsTotalAfter)
@@ -110,7 +114,9 @@ class createCheckListTestCase(CheckTestHelper, TestCase):
     def test_post(self):
         data = {'name': 'testlist',
               'creator': 'tester'}
-        response = self.client.post(self.url, data=data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        response = self.client.post(self.url,
+            data=data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         newList = simplejson.loads(response.content)[0]
         self.assertEqual(data['name'], newList['fields']['name'])
