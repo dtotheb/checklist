@@ -1,14 +1,16 @@
 from django import forms
-from checkApp.models import CheckList
+from checkApp.models import CheckList, Task
 
 
-class TaskForm(forms.Form):
-    text = forms.CharField(max_length=100)
-    pk = forms.IntegerField()
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        exclude = ('done', )
+        widgets = {
+            'checkList': forms.HiddenInput(),
+        }
 
 
 class CheckListForm(forms.ModelForm):
     class Meta:
         model = CheckList
-    name = forms.CharField(max_length=100)
-    creator = forms.CharField(max_length=100)

@@ -21,7 +21,7 @@ def index(request):
 
 def viewList(request, pk):
     list = get_object_or_404(CheckList, pk=pk)
-    form = TaskForm()
+    form = TaskForm(initial={'checkList': list})
     tasks = list.tasks.all()
     context = {
         'list': list,
@@ -58,19 +58,11 @@ def createTask(request):
     if request.is_ajax() and request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
-            pk = request.POST['pk']
-            try:
-                cList = CheckList.objects.get(pk=pk)
-            except CheckList.DoesNotExist:
-                return Http404
-
-            item = Task.objects.create(checkList=cList)
-            item.text = request.POST['text']
-            item.done = False
-
-            item.save()
+            item = form.save()
             data = serializers.serialize('json', [item])
             return HttpResponse(data)
+        else:
+            return HttpResponse(status=405)
     else:
         return HttpResponse(status=403)
 

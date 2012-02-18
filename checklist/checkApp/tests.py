@@ -94,7 +94,7 @@ class createTaskTestCase(CheckTestHelper, TestCase):
 
     def test_post(self):
         itemsTotalBefore = Task.objects.all().count()
-        data = {'pk': 1, 'text': 'test'}
+        data = {'checkList': 1, 'text': 'test'}
         response = self.client.post(self.url,
             data=data,
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')

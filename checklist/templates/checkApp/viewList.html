@@ -20,12 +20,9 @@
             },'json');
         });
 
-        $('form#createTask').submit(function(){
-            var data = {};
-            data['csrfmiddlewaretoken'] = $('input[name=csrfmiddlewaretoken]').val();//grab the hidden csrf token
-            data['pk'] = "{{ list.pk }}";
-            data['text'] = $('input[name=text]').val();
-            $.post("{% url checkApp.views.createTask %}",data, function(resp){
+        $('form#createTask').submit(function(e){
+            e.preventDefault();
+            $.post("{% url checkApp.views.createTask %}",$('#createTask').serialize(), function(resp){
                 var task = resp[0];
                 var newtask = '<li><input type="checkbox" class="checkItem" id="' + task.pk + '">' + task.fields.text + '</li>';
                 $('#tasks').append(newtask);
@@ -51,10 +48,11 @@
 {% endfor %}
 </ul>
     {% load widget_tweaks %}
-<form action="{%  url checkApp.views.createTask %}" method="post" id="createTask">
+<form action="#" method="post" id="createTask">
 {%  csrf_token %}
 {{  form.text }}
-{{  form.pk|attr:"type:hidden" }}
+{{  form.checkList }}
+
 <input type="submit" value="Create Task">
 </form>
 {% endblock %}
