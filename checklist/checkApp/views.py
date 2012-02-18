@@ -79,11 +79,7 @@ def createCheckList(request):
     if request.is_ajax() and request.method == "POST":
         form = CheckListForm(request.POST)
         if form.is_valid():
-            list = CheckList.objects.create()
-            list.name = request.POST['name'],
-            list.creator = request.POST['creator'],
-
-            list.save()
+            list = form.save()
             data = serializers.serialize('json', [list])
             return HttpResponse(data)
     else:

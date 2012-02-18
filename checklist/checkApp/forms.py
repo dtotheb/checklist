@@ -1,4 +1,5 @@
 from django import forms
+from checkApp.models import CheckList
 
 
 class TaskForm(forms.Form):
@@ -6,6 +7,8 @@ class TaskForm(forms.Form):
     pk = forms.IntegerField()
 
 
-class CheckListForm(forms.Form):
+class CheckListForm(forms.ModelForm):
+    class Meta:
+        model = CheckList
     name = forms.CharField(max_length=100)
     creator = forms.CharField(max_length=100)
