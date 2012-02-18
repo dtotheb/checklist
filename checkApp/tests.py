@@ -119,4 +119,5 @@ class createCheckListTestCase(CheckTestHelper, TestCase):
             HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         newList = simplejson.loads(response.content)[0]
-        self.assertEqual(data['name'], newList['fields']['name'])
+        self.assertIn('name', newList['fields'])
+        self.assertIn('creator', newList['fields'])

@@ -62,8 +62,7 @@ def createTask(request):
             except CheckList.DoesNotExist:
                 return Http404
 
-            item = Task.objects.create()
-            item.checklist = cList
+            item = Task.objects.create(checkList=cList)
             item.text = request.POST['text']
             item.done = False
 
