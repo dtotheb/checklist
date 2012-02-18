@@ -5,13 +5,9 @@
 
     $(document).ready(function(){
         $('form#createCheckList').submit(function(){
-            var data = {};
-            data['name'] = $('input[name=name]').val();
-            data['creator'] = $('input[name=creator]').val();
-            data['csrfmiddlewaretoken'] = $('input[name=csrfmiddlewaretoken]').val();//grab the hidden csrf token
-            $.post("{% url checkApp.views.createCheckList %}", data, function(resp){
+            $.post("{% url checkApp.views.createCheckList %}", $('#createCheckList').serialize(), function(resp){
             var item = resp[0];
-            var newlist = '<li><a href="/check/view/' + item.pk + '/">' + item.fields.name + ' - ' +  item.fields.creator + '</a></li>';
+            var newlist = '<li><a href="/check/view/' + item.pk + '/">' + item.fields.name + ' - ' +  item.fields.creator + ' - 0</a></li>';
             $('#checklists').append(newlist);
             },'json');
         return false;
