@@ -25,7 +25,7 @@
 <h1>CheckLists:</h1>
 <ul id="checklists">
 {%  for check in list %}
-    <li><a href="{% url checkApp.views.viewList check.pk  %}">{{ check.name }} - {{ check.creator }} - {{ check.items.count }}</a></li>
+    <li><a href="{% url checkApp.views.viewList check.pk  %}">{{ check.name }} - {{ check.creator }} - {{ check.tasks.count }}</a></li>
 
 {% endfor %}
 </ul>

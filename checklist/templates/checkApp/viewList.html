@@ -46,8 +46,8 @@
 
 <h1>{{ list.name}}</h1>
 <ul id="tasks">
-{% for item in list.items.all %}
-<li><input type="checkbox"{%  if item.done %}checked{% endif %} class="checkItem" id="{{ item.pk }}">{{ item.text }}</li>
+{% for task in tasks|dictsort:"done" %}
+<li><input type="checkbox"{%  if task.done %}checked{% endif %} class="checkItem" id="{{ task.pk }}">{{ task.text }}</li>
 {% endfor %}
 </ul>
     {% load widget_tweaks %}

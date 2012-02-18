@@ -22,9 +22,11 @@ def index(request):
 def viewList(request, pk):
     list = get_object_or_404(CheckList, pk=pk)
     form = TaskForm()
+    tasks = list.tasks.all()
     context = {
         'list': list,
         'title': list.name,
+        'tasks': tasks,
         'csrf': csrf(request),
         'form': form
     }

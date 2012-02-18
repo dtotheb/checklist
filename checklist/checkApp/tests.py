@@ -65,7 +65,7 @@ class viewListTestCase(CheckTestHelper, TestCase):
     def test_pageContext(self):
         context = self.client.get(self.url).context
         self.assertIn('list', context)
-        items = context['list'].items.all()
+        items = context['list'].tasks.all()
         self.assertEqual(items.count(), 2)
 
 
