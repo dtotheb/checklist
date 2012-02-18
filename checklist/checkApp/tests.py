@@ -7,13 +7,11 @@ Replace this with more appropriate tests for your application.
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from checkApp.models import CheckList, Task
-from django.core import serializers
 from django.utils import simplejson
 
 
 class CheckTestHelper(object):
     def create_checklist(self, *args, **kwargs):
-        id = CheckList.objects.all().count()
         defaults = {
             'name': 'test',
             'creator': 'tester'
@@ -22,7 +20,6 @@ class CheckTestHelper(object):
         return CheckList.objects.create(**defaults)
 
     def create_checkItem(self, *args, **kwargs):
-        id = Task.objects.all().count()
         if kwargs.get('pk'):
             pk = kwargs.get('pk')
         else:
