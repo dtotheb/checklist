@@ -117,3 +117,20 @@ def createCheckList(request):
             return HttpResponse(data)
     else:
         return HttpResponse(status=403)
+
+
+def deleteCheckList(request):
+    """
+    Ajax View for Deleting a checklist and all the associated tasks
+    """
+
+    if request.is_ajax() and request.method == "POST":
+        pk = request.POST['pk']
+        list = get_object_or_404(CheckList, pk=pk)
+        tasks = list.tasks.all()
+
+        tasks.delete()
+        list.delete()
+        return HttpResponse(200)
+    else:
+        return HttpResponse(403)

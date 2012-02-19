@@ -121,7 +121,7 @@ class createTask_TestCase(CheckTestHelper, TestCase):
         self.assertEqual(itemsTotalBefore + 1, itemsTotalAfter)
 
 
-class createCheckListTestCase(CheckTestHelper, TestCase):
+class createCheckList_TestCase(CheckTestHelper, TestCase):
     """
     Tests the Ajax view for Creating CheckLists
     """
@@ -139,3 +139,30 @@ class createCheckListTestCase(CheckTestHelper, TestCase):
         newList = simplejson.loads(response.content)[0]
         self.assertIn('name', newList['fields'])
         self.assertIn('creator', newList['fields'])
+
+
+class deleteCheckList_TestCase(CheckTestHelper, TestCase):
+    """
+    Tests the Ajax view for Deleting CheckLists
+    """
+    def setUp(self):
+        CheckTestHelper.setupCheckList(self)
+        self.url = reverse('deleteCheckList')
+
+    def test_post(self):
+        """
+        Sends a post request to the deletecheckList view
+        Tests that there's less CheckLists/Tasks after the Request
+        """
+        checkLists_Before = CheckList.objects.all().count()
+        tasks_Before = Task.objects.all().count()
+        data = {'pk': 1}
+        response = self.client.post(self.url,
+                   data=data,
+                   HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        checkLists_After = CheckList.objects.all().count()
+        tasks_After = Task.objects.all().count()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertLess(checkLists_After, checkLists_Before)
+        self.assertLess(tasks_After, tasks_Before)
