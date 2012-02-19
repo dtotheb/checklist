@@ -11,7 +11,10 @@ from django.utils import simplejson
 
 
 class CheckTestHelper(object):
-    def create_checklist(self, *args, **kwargs):
+    """
+    Helper Object to Handle creating models in the db
+    """
+    def create_checklist(self, **kwargs):
         defaults = {
             'name': 'test',
             'creator': 'tester'
@@ -19,7 +22,7 @@ class CheckTestHelper(object):
         defaults.update(kwargs)
         return CheckList.objects.create(**defaults)
 
-    def create_checkItem(self, *args, **kwargs):
+    def create_checkItem(self, **kwargs):
         if kwargs.get('pk'):
             pk = kwargs.get('pk')
         else:
@@ -32,12 +35,18 @@ class CheckTestHelper(object):
         return Task.objects.create(**defaults)
 
     def setupCheckList(self):
+        """
+        Sets up some CheckList and Tasks for testing
+        """
         CheckTestHelper.create_checklist(self)
         CheckTestHelper.create_checkItem(self, text='test1')
         CheckTestHelper.create_checkItem(self, text='test2')
 
 
-class IndexPageTestCase(CheckTestHelper, TestCase):
+class index_TestCase(CheckTestHelper, TestCase):
+    """
+    Tests the index view
+    """
     def setUp(self):
         CheckTestHelper.setupCheckList(self)
         self.url = reverse('index')
@@ -52,7 +61,10 @@ class IndexPageTestCase(CheckTestHelper, TestCase):
         self.assertIn('list', context)
 
 
-class viewListTestCase(CheckTestHelper, TestCase):
+class viewList_TestCase(CheckTestHelper, TestCase):
+    """
+    Tests the viewList
+    """
     def setUp(self):
         CheckTestHelper.setupCheckList(self)
         self.url = reverse('viewList', args=[1])
@@ -69,7 +81,10 @@ class viewListTestCase(CheckTestHelper, TestCase):
         self.assertEqual(items.count(), 2)
 
 
-class taskDoneTestCase(CheckTestHelper, TestCase):
+class taskDone_TestCase(CheckTestHelper, TestCase):
+    """
+    tests the Ajax view for marking Tasks as Done
+    """
     def setUp(self):
         CheckTestHelper.setupCheckList(self)
         self.url = reverse('taskDone')
@@ -87,7 +102,10 @@ class taskDoneTestCase(CheckTestHelper, TestCase):
         self.assertEqual(item['fields']['done'], False)
 
 
-class createTaskTestCase(CheckTestHelper, TestCase):
+class createTask_TestCase(CheckTestHelper, TestCase):
+    """
+    Tests the Ajax view for creating Tasks
+    """
     def setUp(self):
         CheckTestHelper.setupCheckList(self)
         self.url = reverse('createTask')
@@ -104,6 +122,9 @@ class createTaskTestCase(CheckTestHelper, TestCase):
 
 
 class createCheckListTestCase(CheckTestHelper, TestCase):
+    """
+    Tests the Ajax view for Creating CheckLists
+    """
     def setUp(self):
         CheckTestHelper.setupCheckList(self)
         self.url = reverse('createCheckList')

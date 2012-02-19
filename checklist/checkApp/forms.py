@@ -3,6 +3,9 @@ from checkApp.models import CheckList, Task
 
 
 class TaskForm(forms.ModelForm):
+    """
+    ModelForm for creating Tasks
+    """
     class Meta:
         model = Task
         exclude = ('done', )
@@ -12,5 +15,8 @@ class TaskForm(forms.ModelForm):
 
 
 class CheckListForm(forms.ModelForm):
+    """
+    ModelForm for Creating Checklists
+    """
     class Meta:
         model = CheckList
