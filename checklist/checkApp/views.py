@@ -1,6 +1,5 @@
 # Create your views here.
 from django.shortcuts import render, get_object_or_404
-from django.core.context_processors import csrf
 from django.http import Http404, HttpResponse
 from django.core import serializers
 
@@ -9,6 +8,11 @@ from checkApp.forms import TaskForm, CheckListForm
 
 
 def index(request):
+    """
+    Index view with:
+    List of Checklists
+    Form for Inserting a New checklist
+    """
     clist = CheckList.objects.all()
     form = CheckListForm()
     context = {
@@ -20,6 +24,11 @@ def index(request):
 
 
 def viewList(request, pk):
+    """
+    viewList of CheckList Details with:
+    List of Tasks for a Checklist
+    Form for inserting new tasks
+    """
     list = get_object_or_404(CheckList, pk=pk)
     form = TaskForm(initial={'checkList': list})
     tasks = list.tasks.all()
@@ -27,13 +36,24 @@ def viewList(request, pk):
         'list': list,
         'title': list.name,
         'tasks': tasks,
-        'csrf': csrf(request),
         'form': form
     }
     return render(request, 'checkApp/viewList.html', context)
 
 
 def taskDone(request):
+    """
+    Ajax view for updating a Task's done status
+    Accepts a post request with:
+        pk = Pk of the Task being updated
+        val = The new state of done, either true or false
+    Returns JSON:
+    [{"pk": 1,
+      "model": "checkApp.task",
+      "fields": {"text": "test this",
+                 "done": false,
+                 "checkList": 1}}]
+    """
     if request.is_ajax() and request.method == "POST":
         pk = request.POST['pk']
         val = request.POST['val']
@@ -55,6 +75,17 @@ def taskDone(request):
 
 
 def createTask(request):
+    """
+    Ajax View for Handling Form submits when Creating new Tasks
+    Accepts:
+        TaskForm
+    Returns JSON:
+        [{"pk": 3,
+        "model": "checkApp.task",
+        "fields": {"text": "test",
+                   "done": false,
+                   "checkList": 1}}]
+    """
     if request.is_ajax() and request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -68,6 +99,16 @@ def createTask(request):
 
 
 def createCheckList(request):
+    """
+    Ajax view for handling Form submits when creating new Checklists
+    Accepts:
+        CheckListForm
+    Returns JSON:
+        [{"pk": 2,
+         "model": "checkApp.checklist",
+         "fields": {"name": "testlist",
+                    "creator": "tester"}}]
+    """
     if request.is_ajax() and request.method == "POST":
         form = CheckListForm(request.POST)
         if form.is_valid():
