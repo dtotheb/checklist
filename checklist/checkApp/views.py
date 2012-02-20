@@ -14,7 +14,7 @@ def index(request):
     Form for Inserting a New checklist
     """
     clist = CheckList.objects.all()
-    if request.user:
+    if request.user.username:
         username = request.user.username
     else:
         username = 'anon'
