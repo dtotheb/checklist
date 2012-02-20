@@ -7,7 +7,7 @@
         $('form#createCheckList').submit(function(){
             $.post("{% url checkApp.views.createCheckList %}", $('#createCheckList').serialize(), function(resp){
             var item = resp[0];
-            var newlist = '<li><a href="/check/view/' + item.pk + '/">' + item.fields.name + ' - ' +  item.fields.creator + ' - 0</a></li>';
+            var newlist = '<li class="checkList"><a href="/check/view/' + item.pk + '/">' + item.fields.name + ' - ' +  item.fields.creator + ' - (0)</a></li>';
             $('#checklists').append(newlist);
             },'json');
         return false;
@@ -21,7 +21,7 @@
 <h1>CheckLists:</h1>
 <ul id="checklists">
 {%  for check in list %}
-    <li><a href="{% url checkApp.views.viewList check.pk  %}">{{ check.name }} - {{ check.creator }} - {{ check.tasks.count }}</a></li>
+    <li class="checkList"><a href="{% url checkApp.views.viewList check.pk  %}">{{ check.name }} - {{ check.creator }} - ({{ check.tasks.count }})</a></li>
 
 {% endfor %}
 </ul>

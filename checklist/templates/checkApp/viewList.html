@@ -35,12 +35,11 @@
             e.preventDefault();
             $.post("{% url checkApp.views.createTask %}",$('#createTask').serialize(), function(resp){
                 var task = resp[0];
-                var newtask = '<li><input type="checkbox" class="checkItem" id="' + task.pk + '">' + task.fields.text + '</li>';
+                var newtask = '<li class="checkList"><input type="checkbox" class="checkDone" id="' + task.pk + '"> ' + task.fields.text + '</li>';
                 $('#tasks').append(newtask);
 
                 //bind the checkDone function to the new checkbox
                 $('input#'+ task.pk).click(function(){
-                    alert('yay!');
                     checkDone($(this));
                 });
 
@@ -61,12 +60,12 @@
 {%  block content %}
 
 <h1>{{ list.name}}</h1>
-<ul id="tasks">
+<ul id="tasks" class="unstyled">
 {% for task in tasks|dictsort:"done" %}
-<li><input type="checkbox"{%  if task.done %}checked{% endif %} class="checkDone" id="{{ task.pk }}">{{ task.text }}</li>
+<li class="checkList"><input type="checkbox"{%  if task.done %}checked{% endif %} class="checkDone" id="{{ task.pk }}"> {{ task.text }}</li>
 {% endfor %}
 </ul>
-    {% load widget_tweaks %}
+
 <form action="#" method="post" id="createTask">
 {%  csrf_token %}
 {{  form.text }}
