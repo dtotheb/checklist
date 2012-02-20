@@ -15,6 +15,9 @@ class CheckTestHelper(object):
     Helper Object to Handle creating models in the db
     """
     def create_checklist(self, **kwargs):
+        """
+        Creates a CheckList model in the DB
+        """
         defaults = {
             'name': 'test',
             'creator': 'tester'
@@ -22,7 +25,10 @@ class CheckTestHelper(object):
         defaults.update(kwargs)
         return CheckList.objects.create(**defaults)
 
-    def create_checkItem(self, **kwargs):
+    def create_task(self, **kwargs):
+        """
+        Creates a Task Model in the DB
+        """
         if kwargs.get('pk'):
             pk = kwargs.get('pk')
         else:
@@ -36,11 +42,11 @@ class CheckTestHelper(object):
 
     def setupCheckList(self):
         """
-        Sets up some CheckList and Tasks for testing
+        Sets up a CheckList and some Tasks for testing
         """
         CheckTestHelper.create_checklist(self)
-        CheckTestHelper.create_checkItem(self, text='test1')
-        CheckTestHelper.create_checkItem(self, text='test2')
+        CheckTestHelper.create_task(self, text='test1')
+        CheckTestHelper.create_task(self, text='test2')
 
 
 class index_TestCase(CheckTestHelper, TestCase):
@@ -52,6 +58,9 @@ class index_TestCase(CheckTestHelper, TestCase):
         self.url = reverse('index')
 
     def test_pageLoads(self):
+        """
+        Tests that the page loads, and uses the expected template.
+        """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'checkApp/index.html')
@@ -59,6 +68,17 @@ class index_TestCase(CheckTestHelper, TestCase):
     def test_pageContext(self):
         context = self.client.get(self.url).context
         self.assertIn('list', context)
+        self.assertIn('title', context)
+
+    def test_FormContents(self):
+        """
+        Makes sure that the Form exists and has all the required initial data
+        """
+        context = self.client.get(self.url).context
+        self.assertIn('form', context)
+        form = context['form']
+        self.assertEqual(form.initial['creator'],'anon')
+
 
 
 class viewList_TestCase(CheckTestHelper, TestCase):
@@ -70,15 +90,31 @@ class viewList_TestCase(CheckTestHelper, TestCase):
         self.url = reverse('viewList', args=[1])
 
     def test_pageLoads(self):
+        """
+        Tests that the page loads, and uses the expected template.
+        """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'checkApp/viewList.html')
 
     def test_pageContext(self):
+        """
+        Tests the contents of the Context Object
+        """
         context = self.client.get(self.url).context
         self.assertIn('list', context)
         items = context['list'].tasks.all()
         self.assertEqual(items.count(), 2)
+        self.assertIn('title', context)
+
+    def test_FormContents(self):
+        """
+        Makes sure that the Form exists and has all the required initial data
+        """
+        context = self.client.get(self.url).context
+        self.assertIn('form',context)
+        form = context['form']
+        self.assertEqual(form.initial['checkList'].pk,1)
 
 
 class taskDone_TestCase(CheckTestHelper, TestCase):
@@ -90,6 +126,9 @@ class taskDone_TestCase(CheckTestHelper, TestCase):
         self.url = reverse('taskDone')
 
     def test_post(self):
+        """
+        Sends a post request to the view, and checks that the task is marked as done
+        """
         data = {'pk': 1, 'val': 'true'}
         response = self.client.post(self.url,
             data=data,
@@ -111,6 +150,9 @@ class createTask_TestCase(CheckTestHelper, TestCase):
         self.url = reverse('createTask')
 
     def test_post(self):
+        """
+        Sends a post request to the View and checks that a task is created in the DB
+        """
         itemsTotalBefore = Task.objects.all().count()
         data = {'checkList': 1, 'text': 'test'}
         response = self.client.post(self.url,
@@ -130,6 +172,9 @@ class createCheckList_TestCase(CheckTestHelper, TestCase):
         self.url = reverse('createCheckList')
 
     def test_post(self):
+        """
+        Sends a post request to the View and checks that a CheckList is created in the DB
+        """
         data = {'name': 'testlist',
               'creator': 'tester'}
         response = self.client.post(self.url,
