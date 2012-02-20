@@ -1,0 +1,11 @@
+CheckList App
+
+author: Dan Branton
+email: dotheb@gmail.com
+
+Sample Checklist Application built using the following technologies:
+    - Django for backend server with sqlite3 db
+    - JQuery for handling Ajax Requests
+    - Bootstrap from Twitter for CSS Styling
+
+See SETUP for steps to install requirements and start project.

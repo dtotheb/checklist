@@ -1,0 +1,25 @@
+SETUP STEPS for Checklist
+
+Below steps assume that you'll use virtualenv/pip to install the various requirements
+
+
+1. Setup Environment with Packages in requirements.txt
+    ie.
+    virtualenv checkEnv
+    source checkEnv/bin/activate
+    pip install -r requirements.txt
+
+
+2. Create settings_local.py
+    cd checklist
+    cp settings_local.py.ex settings_local.py
+
+3. Syncdb & Preform South Migration
+    ./manage.py syncdb
+    ./manage.py migrate checkApp
+
+4. Start Application via manage.py
+    ./manage.py runserver 0.0.0.0:8000
+
+5. Open Browser and goto:
+    http://localhost:8000/check/
