@@ -15,11 +15,12 @@ Below steps assume that you'll use virtualenv/pip to install the various require
     cp settings_local.py.ex settings_local.py
 
 3. Syncdb & Preform South Migration
-    ./manage.py syncdb
+    ./manage.py syncdb  (Make sure to create an admin user when prompted)
     ./manage.py migrate checkApp
 
 4. Start Application via manage.py
     ./manage.py runserver 0.0.0.0:8000
 
 5. Open Browser and goto:
-    http://localhost:8000/check/
+    Login at http://localhost:8000/admin/
+    Goto http://localhost:8000/check/

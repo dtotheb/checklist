@@ -20,3 +20,6 @@ class CheckListForm(forms.ModelForm):
     """
     class Meta:
         model = CheckList
+        widgets = {
+            'creator': forms.HiddenInput(),
+        }

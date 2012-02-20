@@ -14,7 +14,11 @@ def index(request):
     Form for Inserting a New checklist
     """
     clist = CheckList.objects.all()
-    form = CheckListForm()
+    if request.user:
+        username = request.user.username
+    else:
+        username = 'anon'
+    form = CheckListForm(initial={'creator': username})
     context = {
         'list': clist,
         'title': 'yay',
