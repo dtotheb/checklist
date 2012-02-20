@@ -21,7 +21,7 @@ def index(request):
     form = CheckListForm(initial={'creator': username})
     context = {
         'list': clist,
-        'title': 'yay',
+        'title': 'Checklists',
         'form': form
     }
     return render(request, 'checkApp/index.html', context)
