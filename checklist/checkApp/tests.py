@@ -77,8 +77,7 @@ class index_TestCase(CheckTestHelper, TestCase):
         context = self.client.get(self.url).context
         self.assertIn('form', context)
         form = context['form']
-        self.assertEqual(form.initial['creator'],'anon')
-
+        self.assertEqual(form.initial['creator'], 'anon')
 
 
 class viewList_TestCase(CheckTestHelper, TestCase):
@@ -112,9 +111,9 @@ class viewList_TestCase(CheckTestHelper, TestCase):
         Makes sure that the Form exists and has all the required initial data
         """
         context = self.client.get(self.url).context
-        self.assertIn('form',context)
+        self.assertIn('form', context)
         form = context['form']
-        self.assertEqual(form.initial['checkList'].pk,1)
+        self.assertEqual(form.initial['checkList'].pk, 1)
 
 
 class taskDone_TestCase(CheckTestHelper, TestCase):
@@ -127,7 +126,8 @@ class taskDone_TestCase(CheckTestHelper, TestCase):
 
     def test_post(self):
         """
-        Sends a post request to the view, and checks that the task is marked as done
+        Sends a post request to the view
+        Checks that task.done is updated
         """
         data = {'pk': 1, 'val': 'true'}
         response = self.client.post(self.url,
@@ -151,7 +151,8 @@ class createTask_TestCase(CheckTestHelper, TestCase):
 
     def test_post(self):
         """
-        Sends a post request to the View and checks that a task is created in the DB
+        Sends a post request to the View
+        Checks that a task is created in the DB
         """
         itemsTotalBefore = Task.objects.all().count()
         data = {'checkList': 1, 'text': 'test'}
@@ -173,7 +174,8 @@ class createCheckList_TestCase(CheckTestHelper, TestCase):
 
     def test_post(self):
         """
-        Sends a post request to the View and checks that a CheckList is created in the DB
+        Sends a post request to the View
+        Checks that a CheckList is created in the DB
         """
         data = {'name': 'testlist',
               'creator': 'tester'}
