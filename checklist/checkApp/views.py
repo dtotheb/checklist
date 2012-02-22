@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import Http404, HttpResponse
 from django.core import serializers
 
-from checkApp.models import CheckList, Task
+from checkApp.models import CheckList, Task, Template
 from checkApp.forms import TaskForm, CheckListForm
 
 
@@ -138,3 +138,15 @@ def deleteCheckList(request):
         return HttpResponse(200)
     else:
         return HttpResponse(403)
+
+def viewTemplates(request):
+    """
+    Lists all the available CheckList Templates
+    """
+    templates = Template.objects.all()
+
+    context = {
+        'templates': templates,
+        'title': 'Templates',
+        }
+    return render(request, 'checkApp/viewTemplates.html', context)

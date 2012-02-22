@@ -215,19 +215,26 @@ class deleteCheckList_TestCase(CheckTestHelper, TestCase):
         self.assertLess(tasks_After, tasks_Before)
 
 
-
 class CheckListTemplate_TestCase(CheckTestHelper, TestCase):
     """
-    Tests for the Template Model, which is a sublcass of CheckLit
+    Tests for the Template Model & ViewTemplates View
     """
     def setUp(self):
         CheckTestHelper.setupCheckList(self)
+        self.url = reverse('viewTemplates')
 
     def test_createFromCheckList(self):
         clist = CheckList.objects.get(pk=1)
-        new_template = Template()
-        new_template.createFromCheckList(clist)
+        new_template = Template().createFromCheckList(clist)
         temp = Template.objects.all()[0]
         self.assertEqual(temp.name, clist.name)
         self.assertEqual(temp.creator, clist.creator)
         self.assertEqual(temp.pickledTasks.count(), 2)
+
+    def test_ViewTemplates(self):
+        clist = CheckList.objects.get(pk=1)
+        new_template = Template().createFromCheckList(clist)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'checkApp/viewTemplates.html')
+
