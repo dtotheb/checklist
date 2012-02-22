@@ -6,7 +6,7 @@ Replace this with more appropriate tests for your application.
 """
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from checkApp.models import CheckList, Task
+from checkApp.models import CheckList, Task, Template
 from django.utils import simplejson
 
 
@@ -213,3 +213,21 @@ class deleteCheckList_TestCase(CheckTestHelper, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertLess(checkLists_After, checkLists_Before)
         self.assertLess(tasks_After, tasks_Before)
+
+
+
+class CheckListTemplate_TestCase(CheckTestHelper, TestCase):
+    """
+    Tests for the Template Model, which is a sublcass of CheckLit
+    """
+    def setUp(self):
+        CheckTestHelper.setupCheckList(self)
+
+    def test_createFromCheckList(self):
+        clist = CheckList.objects.get(pk=1)
+        new_template = Template()
+        new_template.createFromCheckList(clist)
+        temp = Template.objects.all()[0]
+        self.assertEqual(temp.name, clist.name)
+        self.assertEqual(temp.creator, clist.creator)
+        self.assertEqual(temp.pickledTasks.count(), 2)
