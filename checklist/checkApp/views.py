@@ -1,5 +1,5 @@
 # Create your views here.
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404, HttpResponse
 from django.core import serializers
 
@@ -139,6 +139,7 @@ def deleteCheckList(request):
     else:
         return HttpResponse(403)
 
+
 def viewTemplates(request):
     """
     Lists all the available CheckList Templates
@@ -150,3 +151,13 @@ def viewTemplates(request):
         'title': 'Templates',
         }
     return render(request, 'checkApp/viewTemplates.html', context)
+
+
+def startCheckList(request):
+    """
+    View for creating a new CheckList based on an existing template
+    """
+    pk = request.POST['pk']
+    temp = get_object_or_404(Template, pk=pk)
+    new_check = CheckList().createFromTemplate(temp, request.user.username)
+    return redirect('viewList', new_check.pk)

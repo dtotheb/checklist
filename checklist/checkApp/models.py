@@ -12,6 +12,17 @@ class CheckList(models.Model):
     def __unicode__(self):
         return self.name
 
+    def createFromTemplate(self, temp, username):
+        self.name = temp.name
+        self.creator = username
+        newCheck = self.save()
+
+        #setup the tasks
+        for task in temp.pickledTasks:
+            t = Task.objects.create(text=task.text, checkList=self)
+
+        return self
+
 
 class Task(models.Model):
     """
@@ -43,3 +54,4 @@ class Template(models.Model):
         self.creator = checkList.creator
         self.pickledTasks = checkList.tasks.all()
         self.save()
+        return self

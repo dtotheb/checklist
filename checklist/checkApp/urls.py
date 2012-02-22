@@ -9,5 +9,6 @@ urlpatterns = patterns('checkApp.views',
     url(r'^createCheckList/', 'createCheckList', name='createCheckList'),
     url(r'^deleteCheckList/', 'deleteCheckList', name="deleteCheckList"),
     url(r'^viewTemplates/', 'viewTemplates', name="viewTemplates"),
+    url(r'^startCheckList', 'startCheckList', name='startCheckList'),
     url(r'^', 'index', name='index'),
 )

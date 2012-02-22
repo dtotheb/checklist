@@ -225,8 +225,7 @@ class CheckListTemplate_TestCase(CheckTestHelper, TestCase):
 
     def test_createFromCheckList(self):
         clist = CheckList.objects.get(pk=1)
-        new_template = Template().createFromCheckList(clist)
-        temp = Template.objects.all()[0]
+        temp = Template().createFromCheckList(clist)
         self.assertEqual(temp.name, clist.name)
         self.assertEqual(temp.creator, clist.creator)
         self.assertEqual(temp.pickledTasks.count(), 2)
@@ -238,3 +237,18 @@ class CheckListTemplate_TestCase(CheckTestHelper, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'checkApp/viewTemplates.html')
 
+    def test_createFromTemplate(self):
+        clist = CheckList.objects.get(pk=1)
+        new_template = Template().createFromCheckList(clist)
+        new_checklist = CheckList().createFromTemplate(new_template, 'tester')
+
+    def test_startCheckListFromTemplate(self):
+        clist = CheckList.objects.get(pk=1)
+        taskcount_Before = Task.objects.all().count()
+        temp = Template().createFromCheckList(clist)
+        url = reverse('startCheckList')
+        response = self.client.post(url, data={'pk': temp.pk})
+        self.assertEqual(response.status_code, 302)
+
+        taskcount_After = Task.objects.all().count()
+        self.assertGreater(taskcount_After, taskcount_Before)
