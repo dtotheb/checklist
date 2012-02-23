@@ -3,15 +3,34 @@
 {%  block headjs %}
 <script type="text/javascript">
 
+    function deleteCheckList(btn) {
+            var data = {};
+            data['pk'] = $(btn).parent().attr('id');
+            data['csrfmiddlewaretoken'] = $('input[name=csrfmiddlewaretoken]').val();
+            $.post("{% url checkApp.views.deleteCheckList %}", data, function(resp){
+                var pk = resp['pk'];
+                $('li#' + pk).remove();
+            }, 'json');
+    }
+
     $(document).ready(function(){
         $('form#createCheckList').submit(function(){
             $.post("{% url checkApp.views.createCheckList %}", $('#createCheckList').serialize(), function(resp){
             var item = resp[0];
-            var newlist = '<li class="checkList"><a href="/check/view/' + item.pk + '/">' + item.fields.name + ' - ' +  item.fields.creator + ' - (0)</a></li>';
-            $('#checklists').append(newlist);
+            var $newlist = '<li class="checkList" id="' + item.pk + '"><a href="/check/view/' + item.pk + '/">' + item.fields.name + ' - ' +  item.fields.creator + ' - (0)</a> <span class="btn">x</span></li>';
+            $('#checklists').append($newlist);
+            $('li#'+item.pk).children('span').click(function(){
+                deleteCheckList($(this));
+            });
+
             },'json');
         return false;
         });
+
+        $('span.btn').click(function(){
+            deleteCheckList($(this));
+        });
+
     });
 
 </script>
@@ -21,7 +40,11 @@
 <h1>CheckLists:</h1>
 <ul id="checklists">
 {%  for check in list %}
-    <li class="checkList"><a href="{% url checkApp.views.viewList check.pk  %}">{{ check.name }} - {{ check.creator }} - ({{ check.tasks.count }})</a></li>
+    <li class="checkList" id="{{ check.pk }}">
+        <a href="{% url checkApp.views.viewList check.pk  %}">
+            {{ check.name }} - {{ check.creator }} - ({{ check.tasks.count }})
+        </a> <span class="btn">x</span>
+    </li>
 
 {% endfor %}
 </ul>
