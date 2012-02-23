@@ -145,9 +145,10 @@ def viewTemplates(request):
     Lists all the available CheckList Templates
     """
     templates = Template.objects.all()
-
+    lists = CheckList.objects.all()
     context = {
         'templates': templates,
+        'lists': lists,
         'title': 'Templates',
         }
     return render(request, 'checkApp/viewTemplates.html', context)
@@ -161,3 +162,14 @@ def startCheckList(request):
     temp = get_object_or_404(Template, pk=pk)
     new_check = CheckList().createFromTemplate(temp, request.user.username)
     return redirect('viewList', new_check.pk)
+
+def startTemplate(request):
+    """
+    View for creating a new Template based on an existing checklist
+    """
+    pk = request.POST['pk']
+    check = get_object_or_404(CheckList, pk=pk)
+    new_temp = Template().createFromCheckList(check)
+    return redirect('viewTemplates')
+
+

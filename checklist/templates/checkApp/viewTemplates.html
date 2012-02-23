@@ -1,10 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>{{ title }}</h1>
-<ul>
-{%  for temp in templates %}
-<li>{{ temp.name }}</li>
 
-{%  endfor %}
-</ul>
+    <h2>Turn Checklist into Template</h2>
+    <form action="{% url checkApp.views.startTemplate %}" method="POST" class="form-horizontal">
+        {%  csrf_token %}
+        <select name="pk">
+            {% for list in lists %}
+            <option value="{{ list.pk }}">{{ list.name }} - ({{ list.tasks.count }})</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Save as Template" class="btn primary">
+    </form>
+
+    <h2>Start Check From Template</h2>
+
+
+    <form action="{% url checkApp.views.startCheckList %}" method="POST" class="form-horizontal">
+        {%  csrf_token %}
+        <select name="pk">
+            {%  for temp in templates %}
+                <option value="{{ temp.pk }}">{{ temp.name }} - ({{ temp.pickledTasks.count }})</option>
+            {%  endfor %}
+        <input type="submit" value="Start Checklist" class="btn primary">
+    </form>
 {%  endblock %}
