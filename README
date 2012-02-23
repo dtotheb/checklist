@@ -1,7 +1,7 @@
 CheckList App
 
 author: Dan Branton
-email: dotheb@gmail.com
+email: dtotheb@gmail.com
 
 Sample Checklist Application built using the following technologies:
     - Django for backend server with sqlite3 db
