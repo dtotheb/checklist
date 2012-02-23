@@ -61,10 +61,7 @@ def taskDone(request):
     if request.is_ajax() and request.method == "POST":
         pk = request.POST['pk']
         val = request.POST['val']
-        try:
-            task = Task.objects.get(pk=pk)
-        except Task.DoesNotExist:
-            return Http404
+        task = get_object_or_404(Task, pk=pk)
 
         if val == 'true':
             task.done = False
@@ -138,7 +135,7 @@ def deleteCheckList(request):
         data = '{"pk": ' + pk + '}'
         return HttpResponse(data)
     else:
-        return HttpResponse(403)
+        return HttpResponse(status=405)
 
 
 def viewTemplates(request):
