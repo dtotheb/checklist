@@ -3,6 +3,7 @@
 <h1>{{ title }}</h1>
 
     <h2>Turn Checklist into Template</h2>
+    {% if lists %}
     <form action="{% url checkApp.views.startTemplate %}" method="POST" class="form-horizontal">
         {%  csrf_token %}
         <select name="pk">
@@ -12,16 +13,25 @@
         </select>
         <input type="submit" value="Save as Template" class="btn primary">
     </form>
+    {% else %}
+        <h3>No Checklists!</h3>
+    {% endif %}
+
+
 
     <h2>Start Check From Template</h2>
 
-
+    {%  if templates %}
     <form action="{% url checkApp.views.startCheckList %}" method="POST" class="form-horizontal">
         {%  csrf_token %}
         <select name="pk">
             {%  for temp in templates %}
                 <option value="{{ temp.pk }}">{{ temp.name }} - ({{ temp.pickledTasks.count }})</option>
             {%  endfor %}
+        </select>
         <input type="submit" value="Start Checklist" class="btn primary">
     </form>
+    {% else %}
+        <h3>No Templates!</h3>
+    {%  endif %}
 {%  endblock %}
