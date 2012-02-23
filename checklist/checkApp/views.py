@@ -135,7 +135,8 @@ def deleteCheckList(request):
 
         tasks.delete()
         list.delete()
-        return HttpResponse(200)
+        data = '{"pk": ' + pk + '}'
+        return HttpResponse(data)
     else:
         return HttpResponse(403)
 

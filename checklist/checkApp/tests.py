@@ -211,6 +211,8 @@ class deleteCheckList_TestCase(CheckTestHelper, TestCase):
         tasks_After = Task.objects.all().count()
 
         self.assertEqual(response.status_code, 200)
+        resp = simplejson.loads(response.content)
+        self.assertEqual(resp['pk'], data['pk'])
         self.assertLess(checkLists_After, checkLists_Before)
         self.assertLess(tasks_After, tasks_Before)
 
