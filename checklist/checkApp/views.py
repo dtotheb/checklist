@@ -163,6 +163,7 @@ def startCheckList(request):
     new_check = CheckList().createFromTemplate(temp, request.user.username)
     return redirect('viewList', new_check.pk)
 
+
 def startTemplate(request):
     """
     View for creating a new Template based on an existing checklist
@@ -171,5 +172,3 @@ def startTemplate(request):
     check = get_object_or_404(CheckList, pk=pk)
     new_temp = Template().createFromCheckList(check)
     return redirect('viewTemplates')
-
-

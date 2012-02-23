@@ -73,4 +73,10 @@
 
 <input type="submit" value="Add Task" class="btn primary">
 </form>
+
+<form action="{% url checkApp.views.startTemplate %}" method="post" id="createTemplate">
+    {%  csrf_token %}
+    <input type="hidden" name="pk" value="{{ list.pk }}">
+    <input type="submit" value="Save as Template" class="btn primary">
+</form>
 {% endblock %}
