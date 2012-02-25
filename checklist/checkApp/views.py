@@ -13,12 +13,18 @@ def index(request):
     List of Checklists
     Form for Inserting a New checklist
     """
-    clist = CheckList.objects.all()
+
     if request.user.username:
         username = request.user.username
     else:
         username = 'anon'
     form = CheckListForm(initial={'creator': username})
+
+    try:
+        clist = CheckList.objects.filter(creator=username)
+    except CheckList.DoesNotExist:
+        clist = []
+
     context = {
         'list': clist,
         'title': 'Checklists',
