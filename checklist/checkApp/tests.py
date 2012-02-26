@@ -6,9 +6,20 @@ Replace this with more appropriate tests for your application.
 """
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from checkApp.models import CheckList, Task, Template
 from django.utils import simplejson
+from django.contrib.auth.models import User
 
+from checkApp.models import CheckList, Task, Template
+
+def login(self, username="tester", password="test"):
+    url = reverse('login')
+    data = { 'username': username,
+             'password': password, }
+    return self.client.post(url,data=data,follow=True)
+
+def logout(self):
+    url = reverse('logout')
+    return self.client.post(url,follow=True)
 
 class CheckTestHelper(object):
     """
@@ -48,12 +59,31 @@ class CheckTestHelper(object):
         CheckTestHelper.create_task(self, text='test1')
         CheckTestHelper.create_task(self, text='test2')
 
+    def setupUser(self):
+        return User.objects.create_user(username="tester",email="test@test.com",password="test")
+
+class userAuth_TestCase(CheckTestHelper, TestCase):
+    def setUp(self):
+        CheckTestHelper.setupUser(self)
+
+    def test_login(self):
+        response = login(self)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'checkApp/index.html')
+        self.assertEqual(response.context['user'].username, 'tester')
+
+    def test_logout(self):
+        response = login(self)
+        response = logout(self)
+        self.assertEqual(response.status_code, 200)
+
 
 class index_TestCase(CheckTestHelper, TestCase):
     """
     Tests the index view
     """
     def setUp(self):
+        CheckTestHelper.setupUser(self)
         CheckTestHelper.setupCheckList(self)
         self.url = reverse('index')
 
@@ -74,10 +104,11 @@ class index_TestCase(CheckTestHelper, TestCase):
         """
         Makes sure that the Form exists and has all the required initial data
         """
+        login(self)
         context = self.client.get(self.url).context
         self.assertIn('form', context)
         form = context['form']
-        self.assertEqual(form.initial['creator'], 'anon')
+        self.assertEqual(form.initial['creator'], 'tester')
 
 
 class viewList_TestCase(CheckTestHelper, TestCase):

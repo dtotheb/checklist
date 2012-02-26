@@ -11,5 +11,7 @@ urlpatterns = patterns('checkApp.views',
     url(r'^viewTemplates/', 'viewTemplates', name="viewTemplates"),
     url(r'^startCheckList', 'startCheckList', name='startCheckList'),
     url(r'^startTemplate', 'startTemplate', name='startTemplate'),
+    url(r'^login/', 'login_view', name='login'),
+    url(r'^logout/', 'logout_view', name='logout'),
     url(r'^', 'index', name='index'),
 )

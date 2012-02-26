@@ -1,7 +1,8 @@
-# Create your views here.
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import Http404, HttpResponse
 from django.core import serializers
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from checkApp.models import CheckList, Task, Template
 from checkApp.forms import TaskForm, CheckListForm
@@ -14,16 +15,17 @@ def index(request):
     Form for Inserting a New checklist
     """
 
-    if request.user.username:
+    if request.user.is_authenticated():
         username = request.user.username
+        try:
+            clist = CheckList.objects.filter(creator=username)
+        except CheckList.DoesNotExist:
+            clist = []
     else:
         username = 'anon'
-    form = CheckListForm(initial={'creator': username})
+        clist = CheckList.objects.all()
 
-    try:
-        clist = CheckList.objects.filter(creator=username)
-    except CheckList.DoesNotExist:
-        clist = []
+    form = CheckListForm(initial={'creator': username})
 
     context = {
         'list': clist,
@@ -32,6 +34,23 @@ def index(request):
     }
     return render(request, 'checkApp/index.html', context)
 
+
+def login_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            login(request, user)
+            return redirect('index')
+        else:
+            return HttpResponse(status=403)
+    else:
+        return HttpResponse(status=403)
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')
 
 def viewList(request, pk):
     """
