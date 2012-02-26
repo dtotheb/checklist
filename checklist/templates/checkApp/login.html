@@ -1,0 +1,20 @@
+{%  extends 'base.html' %}
+
+{% block content %}
+
+<form action="{% url checkApp.views.login_view %}" method="POST" id="login" class="form-horizontal">
+{%  csrf_token %}
+    <div class="clearfix">
+        <label>Username:</label>
+        <div class="input">{{ form.username }}</div>
+    </div>
+    <div class="clearfix">
+        <label>Password:</label>
+        <div class="input">{{ form.password }}</div>
+    </div>
+    <div class="clearfix">
+        <div class="input"><input type="submit" value="Login" class="btn primary"></div>
+    </div>
+</form>
+
+{% endblock %}

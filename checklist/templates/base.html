@@ -27,8 +27,13 @@
                     <a href="{%  url checkApp.views.index %}" class="brand"> {{ title }}</a>
 
                     <ul class="nav">
-                        <li><a href="{%  url admin:index %}">admin</a></li>
-                        <li><a href="{% url checkApp.views.viewTemplates %}">Templates</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{%  url admin:index %}">admin</a></li>
+                            <li><a href="{% url checkApp.views.viewTemplates %}">Templates</a></li>
+                            <li><a href="{%  url checkApp.views.logout_view %}">Logout</a></li>
+                        {% else %}
+                            <li><a href="{%  url checkApp.views.login_view %}">Login</a></li>
+                        {% endif %}
                     </ul>
                 {% endblock %}
 

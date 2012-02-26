@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from checkApp.models import CheckList, Task, Template
-from checkApp.forms import TaskForm, CheckListForm
+from checkApp.forms import TaskForm, CheckListForm, LoginForm
 
 
 def index(request):
@@ -36,17 +36,27 @@ def index(request):
 
 
 def login_view(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            login(request, user)
-            return redirect('index')
+    """
+    Login View
+    """
+    form = LoginForm()
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('index')
+            else:
+                return HttpResponse(status=403)
         else:
             return HttpResponse(status=403)
     else:
-        return HttpResponse(status=403)
+        context = {
+            'form': form
+        }
+        return render(request, 'checkApp/login.html', context)
 
 
 def logout_view(request):
@@ -100,6 +110,7 @@ def taskDone(request):
         return HttpResponse(data)
     else:
         return HttpResponse(status=403)
+
 
 @login_required()
 def createTask(request):
