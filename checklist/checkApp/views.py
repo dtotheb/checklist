@@ -179,13 +179,13 @@ def deleteCheckList(request):
     else:
         return HttpResponse(status=405)
 
-
+@login_required
 def viewTemplates(request):
     """
     Lists all the available CheckList Templates
     """
-    templates = Template.objects.all()
-    lists = CheckList.objects.all()
+    templates = Template.objects.filter(creator=request.user.username)
+    lists = CheckList.objects.filter(creator=request.user.username)
     context = {
         'templates': templates,
         'lists': lists,

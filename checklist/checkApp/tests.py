@@ -274,6 +274,7 @@ class View_ViewTemplates_TestCase(CheckTestHelper, TestCase):
     """
     def setUp(self):
         CheckTestHelper.setupCheckList(self)
+        login(self)
         self.url = reverse('viewTemplates')
 
     def test_pageLoads(self):
