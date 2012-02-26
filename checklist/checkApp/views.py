@@ -48,9 +48,11 @@ def login_view(request):
     else:
         return HttpResponse(status=403)
 
+
 def logout_view(request):
     logout(request)
     return redirect('index')
+
 
 def viewList(request, pk):
     """
@@ -99,7 +101,7 @@ def taskDone(request):
     else:
         return HttpResponse(status=403)
 
-
+@login_required()
 def createTask(request):
     """
     Ajax View for Handling Form submits when Creating new Tasks
@@ -124,6 +126,7 @@ def createTask(request):
         return HttpResponse(status=403)
 
 
+@login_required()
 def createCheckList(request):
     """
     Ajax view for handling Form submits when creating new Checklists
@@ -145,6 +148,7 @@ def createCheckList(request):
         return HttpResponse(status=403)
 
 
+@login_required()
 def deleteCheckList(request):
     """
     Ajax View for Deleting a checklist and all the associated tasks
@@ -153,12 +157,14 @@ def deleteCheckList(request):
     if request.is_ajax() and request.method == "POST":
         pk = request.POST['pk']
         list = get_object_or_404(CheckList, pk=pk)
-        tasks = list.tasks.all()
-
-        tasks.delete()
-        list.delete()
-        data = '{"pk": ' + pk + '}'
-        return HttpResponse(data)
+        if list.creator == request.user.username:
+            tasks = list.tasks.all()
+            tasks.delete()
+            list.delete()
+            data = '{"pk": ' + pk + '}'
+            return HttpResponse(data)
+        else:
+            return HttpResponse(status=403)
     else:
         return HttpResponse(status=405)
 
@@ -177,6 +183,7 @@ def viewTemplates(request):
     return render(request, 'checkApp/viewTemplates.html', context)
 
 
+@login_required()
 def startCheckList(request):
     """
     View for creating a new CheckList based on an existing template
@@ -187,6 +194,7 @@ def startCheckList(request):
     return redirect('viewList', new_check.pk)
 
 
+@login_required()
 def startTemplate(request):
     """
     View for creating a new Template based on an existing checklist
