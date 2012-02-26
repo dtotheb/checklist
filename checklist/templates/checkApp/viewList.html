@@ -65,7 +65,7 @@
 <li class="checkList"><input type="checkbox"{%  if task.done %}checked{% endif %} class="checkDone" id="{{ task.pk }}"> {{ task.text }}</li>
 {% endfor %}
 </ul>
-
+{% if user.is_authenticated %}
 <form action="#" method="post" id="createTask">
 {%  csrf_token %}
 {{  form.text }}
@@ -79,4 +79,5 @@
     <input type="hidden" name="pk" value="{{ list.pk }}">
     <input type="submit" value="Save as Template" class="btn primary">
 </form>
+{% endif %}
 {% endblock %}
